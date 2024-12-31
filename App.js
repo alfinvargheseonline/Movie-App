@@ -1,20 +1,51 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import Homepage from "./screen/Homepage"; // assuming it's the main screen
+import MovieDetail from "./screen/MovieDetail";
+import AiringToday from "./screen/AiringToday";
+import OnTheAir from "./screen/OnTheAir";
+import Popular from "./screen/Popular";
+import Actors from "./screen/Actors";
+// your movie detail screen component
+
+const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Homepage">
+        <Stack.Screen
+          name="Homepage"
+          component={Homepage}
+          options={{ headerShown: false }} // Hide the header for the Homepage screen
+        />
+        <Stack.Screen
+          name="MovieDetail"
+          component={MovieDetail}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="AiringToday"
+          component={AiringToday}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="OnTheAir"
+          component={OnTheAir}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Popular"
+          component={Popular}
+          options={{ headerShown: false }}
+        />
+         <Stack.Screen
+          name="Actors"
+          component={Actors}
+          options={{ headerShown: false }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

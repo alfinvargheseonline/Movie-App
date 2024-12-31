@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Movie-App",
+    "name": "Trackin Base",
     "slug": "Movie-App",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -19,10 +19,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.alfinvarghese.MovieApp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "4da84dfc-2d7f-4b9e-aa87-6a42b4bd1c9b"
+      }
     }
   }
 }
