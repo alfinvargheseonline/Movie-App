@@ -190,55 +190,67 @@ function Homepage() {
         )}
 
         {/* Menu Modal */}
-        <Modal
-          transparent
-          visible={menuVisible}
-          animationType="slide"
-          onRequestClose={toggleMenu}
-        >
-          <TouchableWithoutFeedback onPress={toggleMenu}>
-            <View style={styles.overlay}>
-              <View style={styles.menuContainer}>
-                <TouchableOpacity
-                  style={styles.menuItem}
-                  onPress={() => {
-                    toggleMenu();
-                    navigation.navigate("AiringToday");
-                  }}
-                >
-                  <Text style={styles.menuText}>Airing Today</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.menuItem}
-                  onPress={() => {
-                    toggleMenu();
-                    navigation.navigate("OnTheAir");
-                  }}
-                >
-                  <Text style={styles.menuText}>On The Air</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.menuItem}
-                  onPress={() => {
-                    toggleMenu();
-                    navigation.navigate("Popular");
-                  }}
-                >
-                  <Text style={styles.menuText}>Popular</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.menuItem}
-                  onPress={() => {
-                    toggleMenu();
-                    navigation.navigate("Actors");
-                  }}
-                >
-                  <Text style={styles.menuText}>Actors</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </TouchableWithoutFeedback>
-        </Modal>
+<Modal
+  transparent
+  visible={menuVisible}
+  animationType="slide"
+  onRequestClose={toggleMenu}
+>
+  <TouchableWithoutFeedback onPress={toggleMenu}>
+    <View style={styles.overlay}>
+      <TouchableWithoutFeedback>
+        <View style={styles.sideMenuContainer}>
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => {
+              toggleMenu();
+              navigation.navigate("AiringToday");
+            }}
+          >
+            <Text style={styles.menuText}>Airing Today</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => {
+              toggleMenu();
+              navigation.navigate("OnTheAir");
+            }}
+          >
+            <Text style={styles.menuText}>On The Air</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => {
+              toggleMenu();
+              navigation.navigate("Popular");
+            }}
+          >
+            <Text style={styles.menuText}>Popular</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => {
+              toggleMenu();
+              navigation.navigate("Actors");
+            }}
+          >
+            <Text style={styles.menuText}>Actors</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => {
+              toggleMenu();
+              navigation.navigate("Video");
+            }}
+          >
+            <Text style={styles.menuText}>Video</Text>
+          </TouchableOpacity>
+        </View>
+      </TouchableWithoutFeedback>
+    </View>
+  </TouchableWithoutFeedback>
+</Modal>
+
       </ScrollView>
     </SafeAreaView>
   );
@@ -315,13 +327,17 @@ const styles = StyleSheet.create({
   overlay: {
     flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.5)",
-    justifyContent: "flex-end",
+    justifyContent: "flex-start", // Change this to align items for side menu
+    flexDirection: "row",
   },
-  menuContainer: {
+  sideMenuContainer: {
+    width: "70%", // Adjust the width for the side menu
     backgroundColor: "#1a1a1a",
     padding: 20,
-    borderTopLeftRadius: 10,
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
     borderTopRightRadius: 10,
+    borderBottomRightRadius: 10,
   },
   menuItem: {
     marginVertical: 10,
