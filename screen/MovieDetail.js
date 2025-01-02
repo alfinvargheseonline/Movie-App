@@ -1,13 +1,13 @@
 import React from "react";
 import { StyleSheet, Text, View, Image, ScrollView, SafeAreaView } from "react-native";
+import { LinearGradient } from "expo-linear-gradient"; // For overlay effect
 import { MaterialCommunityIcons } from "@expo/vector-icons"; // For rating stars
 
 const MovieDetail = ({ route }) => {
-  const { item } = route.params; // Get the item passed from the Homepage
+  const { item } = route.params;
 
-  // Function to render stars based on the vote average
   const renderStars = (rating) => {
-    const filledStars = Math.round(rating / 2); // Out of 5 stars, as rating is out of 10
+    const filledStars = Math.round(rating / 2);
     const totalStars = 5;
     const stars = [];
 
@@ -29,72 +29,78 @@ const MovieDetail = ({ route }) => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
-        {/* Backdrop Image */}
-        <Image
-          source={{
-            uri: `https://image.tmdb.org/t/p/w500${item.backdrop_path}`,
-          }}
-          style={styles.backdropImage}
-        />
-        
+        {/* Backdrop Image with Gradient Overlay */}
+        <View style={styles.imageContainer}>
+          <Image
+            source={{
+              uri: `https://image.tmdb.org/t/p/w500${item.backdrop_path}`,
+            }}
+            style={styles.backdropImage}
+          />
+          <LinearGradient
+            colors={["rgba(0,0,0,0.6)", "transparent"]}
+            style={styles.gradient}
+          />
+        </View>
+
         {/* Movie Title */}
         <Text style={styles.title}>{item.title || item.name}</Text>
 
-        {/* Movie Overview */}
-        <Text style={styles.overview}>{item.overview}</Text>
-
         {/* Rating */}
         <View style={styles.ratingContainer}>
-          <Text style={styles.vote}>Rating: </Text>
+          <Text style={styles.vote}>Rating:</Text>
           <View style={styles.stars}>{renderStars(item.vote_average)}</View>
         </View>
 
+        {/* Movie Overview */}
+        <Text style={styles.subheading}>Overview</Text>
+        <Text style={styles.overview}>{item.overview || "No overview available."}</Text>
+
         {/* Additional Details */}
-        <Text style={styles.subheading}>Additional Details</Text>
-        <Text style={styles.details}>
-          Original Name: {item.original_name || "N/A"}
-        </Text>
-        <Text style={styles.details}>
-          Media Type: {item.media_type || "N/A"}
-        </Text>
-        <Text style={styles.details}>
-          Popularity: {item.popularity || "N/A"}
-        </Text>
-        <Text style={styles.details}>
-          First Air Date: {item.first_air_date || item.release_date || "N/A"}
-        </Text>
-        <Text style={styles.details}>
-          Vote Average: {item.vote_average || "N/A"}
-        </Text>
-        <Text style={styles.details}>
-          Vote Count: {item.vote_count || "N/A"}
-        </Text>
+        <View style={styles.detailsContainer}>
+          <Text style={styles.details}>
+            <Text style={styles.detailsLabel}>Original Name: </Text>
+            {item.original_name || "N/A"}
+          </Text>
+          <Text style={styles.details}>
+            <Text style={styles.detailsLabel}>Media Type: </Text>
+            {item.media_type || "N/A"}
+          </Text>
+          <Text style={styles.details}>
+            <Text style={styles.detailsLabel}>Popularity: </Text>
+            {item.popularity || "N/A"}
+          </Text>
+          <Text style={styles.details}>
+            <Text style={styles.detailsLabel}>Release Date: </Text>
+            {item.first_air_date || item.release_date || "N/A"}
+          </Text>
+          <Text style={styles.details}>
+            <Text style={styles.detailsLabel}>Vote Average: </Text>
+            {item.vote_average || "N/A"}
+          </Text>
+          <Text style={styles.details}>
+            <Text style={styles.detailsLabel}>Vote Count: </Text>
+            {item.vote_count || "N/A"}
+          </Text>
+        </View>
 
-        {/* Release Date */}
-        <Text style={styles.subheading}>Release Date</Text>
-        <Text style={styles.releaseDate}>
-          {item.first_air_date || item.release_date}
-        </Text>
-
-        {/* Genre(s) */}
+        {/* Genres */}
         <Text style={styles.subheading}>Genre(s)</Text>
-        <Text style={styles.genre}>
-          {item.genre_ids.map((id, index) => (
-            <Text key={id}>
-              {index > 0 ? ", " : ""}
-              {/* Placeholder for actual genre names */}
-              {id} {/* You can map the genre IDs to names here */}
-            </Text>
+        <View style={styles.badges}>
+          {item.genre_ids.map((id) => (
+            <View key={id} style={styles.badge}>
+              <Text style={styles.badgeText}>{id}</Text>
+            </View>
           ))}
-        </Text>
+        </View>
 
         {/* Origin Country */}
         <Text style={styles.subheading}>Origin Country</Text>
-<Text style={styles.originCountry}>
-  {Array.isArray(item.origin_country) && item.origin_country.length > 0
-    ? item.origin_country.join(", ")
-    : "N/A"}
-</Text>
+        <Text style={styles.originCountry}>
+          {Array.isArray(item.origin_country) && item.origin_country.length > 0
+            ? item.origin_country.join(", ")
+            : "N/A"}
+        </Text>
       </ScrollView>
     </SafeAreaView>
   );
@@ -103,34 +109,42 @@ const MovieDetail = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#000",
+    backgroundColor: "#121212",
     padding: 10,
-    marginTop:0
+  },
+  imageContainer: {
+    position: "relative",
   },
   backdropImage: {
     width: "100%",
     height: 300,
     borderRadius: 10,
-    marginBottom: 20,
+    marginTop:30
+  },
+  gradient: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    height: "100%",
+    borderRadius: 10,
   },
   title: {
     color: "#fff",
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: "bold",
-    marginBottom: 10,
-  },
-  overview: {
-    color: "#fff",
-    fontSize: 16,
-    marginVertical: 10,
+    textAlign: "center",
+    marginVertical: 20,
   },
   ratingContainer: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "center",
+    marginVertical: 10,
   },
   vote: {
     color: "#fff",
-    fontSize: 16,
+    fontSize: 18,
     marginRight: 10,
   },
   stars: {
@@ -138,30 +152,50 @@ const styles = StyleSheet.create({
   },
   subheading: {
     color: "#ffd700",
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: "bold",
     marginTop: 20,
     marginBottom: 10,
   },
-  releaseDate: {
-    color: "#fff",
-    fontSize: 14,
-    marginTop: 10,
+  overview: {
+    color: "#ddd",
+    fontSize: 16,
+    lineHeight: 22,
+    marginBottom: 20,
   },
-  genre: {
-    color: "#fff",
-    fontSize: 14,
-    marginTop: 10,
-  },
-  originCountry: {
-    color: "#fff",
-    fontSize: 14,
-    marginTop: 10,
+  detailsContainer: {
+    marginVertical: 20,
   },
   details: {
     color: "#fff",
+    fontSize: 16,
+    marginBottom: 5,
+  },
+  detailsLabel: {
+    fontWeight: "bold",
+    color: "#ffd700",
+  },
+  badges: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginBottom: 20,
+  },
+  badge: {
+    backgroundColor: "#333",
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 15,
+    marginRight: 10,
+    marginBottom: 10,
+  },
+  badgeText: {
+    color: "#fff",
     fontSize: 14,
-    marginTop: 5,
+  },
+  originCountry: {
+    color: "#fff",
+    fontSize: 16,
+    marginTop: 10,
   },
 });
 

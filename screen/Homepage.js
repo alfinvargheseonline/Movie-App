@@ -243,7 +243,7 @@ function Homepage() {
               navigation.navigate("Video");
             }}
           >
-            <Text style={styles.menuText}>Video</Text>
+            <Text style={styles.menuText}>Movie Providers</Text>
           </TouchableOpacity>
         </View>
       </TouchableWithoutFeedback>
@@ -326,24 +326,32 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    justifyContent: "flex-start", // Change this to align items for side menu
+    backgroundColor: "rgba(0, 0, 0, 0.8)",
+    justifyContent: "flex-start",
     flexDirection: "row",
   },
   sideMenuContainer: {
-    width: "70%", // Adjust the width for the side menu
-    backgroundColor: "#1a1a1a",
+    width: "70%",
+    backgroundColor: "#111",
     padding: 20,
     justifyContent: "flex-start",
-    alignItems: "flex-start",
-    borderTopRightRadius: 10,
-    borderBottomRightRadius: 10,
+    borderTopRightRadius: 15,
+    borderBottomRightRadius: 15,
   },
   menuItem: {
-    marginVertical: 10,
+    marginVertical: 15,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    backgroundColor: "#222",
+    borderRadius: 8,
   },
   menuText: {
     fontSize: 18,
+    fontWeight: "600",
     color: "#fff",
   },
+  menuItemActive: {
+    backgroundColor: "#e50914", // Netflix red for the active item
+  },
 });
+
