@@ -32,7 +32,7 @@ const Actors = () => {
 
   useEffect(() => {
     // Fetch default actors (optional)
-    fetchActors('Tom'); // Example default query
+    fetchActors('p'); // Example default query
   }, []);
 
   const handleSearch = () => {

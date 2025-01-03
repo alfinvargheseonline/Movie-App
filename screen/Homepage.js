@@ -353,5 +353,17 @@ const styles = StyleSheet.create({
   menuItemActive: {
     backgroundColor: "#e50914", // Netflix red for the active item
   },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#000",
+  },
+  loadingText: {
+    color: "#fff",
+    fontSize: 18,
+    marginTop: 10,
+    fontWeight: "bold",
+  }
 });
 
