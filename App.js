@@ -8,6 +8,7 @@ import OnTheAir from "./screen/OnTheAir";
 import Popular from "./screen/Popular";
 import Actors from "./screen/Actors";
 import Video from "./screen/Video";
+import Trailer from "./screen/Trailer";
 // your movie detail screen component
 
 const Stack = createStackNavigator();
@@ -49,6 +50,12 @@ export default function App() {
         <Stack.Screen
           name="Video"
           component={Video}
+          options={{ headerShown: false }}Trailer
+        />
+
+<Stack.Screen
+          name="Trailer"
+          component={Trailer}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
