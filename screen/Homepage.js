@@ -245,6 +245,16 @@ function Homepage() {
           >
             <Text style={styles.menuText}>Movie Providers</Text>
           </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => {
+              toggleMenu();
+              navigation.navigate("Trailer");
+            }}
+          >
+            <Text style={styles.menuText}>Movie Trailer</Text>
+          </TouchableOpacity>
         </View>
       </TouchableWithoutFeedback>
     </View>

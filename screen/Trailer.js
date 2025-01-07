@@ -1,53 +1,83 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet, ScrollView, SafeAreaView, StatusBar } from 'react-native';
+import { WebView } from 'react-native-webview'; // Import WebView
 
 const Trailer = () => {
   const [trailers, setTrailers] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchTrailers = async () => {
-      const options = {
-        method: 'GET',
-        headers: {
-          accept: 'application/json',
-          Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1YjA3NGNiNTNmYzUyMTY0MWM1MzQ3OGQzZTczYzI4NSIsIm5iZiI6MTczNDU5MjM2Ni4yMjg5OTk5LCJzdWIiOiI2NzYzYzc2ZTYzODUzNjU5YmQ0YTQ4MTAiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.ejag64COeITiFQRV5mWrHgmNh6SdHc3Tjhvwl_ry3vA'
-        }
-      };
+  // Your actual API Key here
+  const apiKey = '5b074cb53fc521641c53478d3e73c285'; // Replace with your API key
 
+  useEffect(() => {
+    const fetchLatestMovies = async () => {
       try {
-        const response = await fetch('https://api.themoviedb.org/3/movie/movie_id/videos?language=en-US', options);
+        const response = await fetch(
+          `https://api.themoviedb.org/3/movie/now_playing?api_key=${apiKey}&language=en-US&page=1`
+        );
+
         const data = await response.json();
-        setTrailers(data.results || []); // Assuming `results` contains the trailer data
+        console.log('Fetched Data:', data); // Log the response to check if data is fetched
+
+        if (data.results) {
+          // Fetch trailer details for each movie
+          const trailerPromises = data.results.map(async (movie) => {
+            const trailerResponse = await fetch(
+              `https://api.themoviedb.org/3/movie/${movie.id}/videos?api_key=${apiKey}&language=en-US`
+            );
+            const trailerData = await trailerResponse.json();
+            return {
+              title: movie.title,
+              trailerKey: trailerData.results[0]?.key, // Get the first trailer key
+            };
+          });
+
+          const trailersData = await Promise.all(trailerPromises);
+          setTrailers(trailersData);
+        } else {
+          console.error('No results found in the API response');
+        }
       } catch (error) {
-        console.error('Error fetching trailer data:', error);
+        console.error('Error fetching movie data:', error); // Catch and log any errors
       } finally {
         setLoading(false);
       }
     };
 
-    fetchTrailers();
+    fetchLatestMovies();
   }, []);
 
-  if (loading) {
-    return (
-      <View style={styles.center}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
-    );
-  }
-
   return (
-    <View style={styles.container}>
-      {trailers.length > 0 ? (
-        trailers.map((trailer, index) => (
-          <Text key={index} style={styles.text}>
-            {trailer.name} ({trailer.type})
-          </Text>
-        ))
-      ) : (
-        <Text style={styles.text}>No trailers available</Text>
-      )}
+    <View style={{ flex: 1 }}>
+      <StatusBar barStyle="light-content" />
+      <SafeAreaView style={styles.container}>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+          <Text style={styles.header}>Latest Movie Trailers</Text>
+          {loading ? (
+            <ActivityIndicator size="large" color="#ffffff" />
+          ) : (
+            trailers.length > 0 ? (
+              trailers.map((trailer, index) => (
+                <View key={index} style={styles.movieContainer}>
+                  <Text style={styles.movieTitle}>{trailer.title}</Text>
+                  {trailer.trailerKey ? (
+                    <WebView
+                      style={styles.webview}
+                      source={{ uri: `https://www.youtube.com/embed/${trailer.trailerKey}` }}
+                      javaScriptEnabled={true}
+                      domStorageEnabled={true}
+                    />
+                  ) : (
+                    <Text style={styles.noTrailerText}>No trailer available</Text>
+                  )}
+                </View>
+              ))
+            ) : (
+              <Text style={styles.noTrailerText}>No trailers available.</Text>
+            )
+          )}
+        </ScrollView>
+      </SafeAreaView>
     </View>
   );
 };
@@ -55,19 +85,48 @@ const Trailer = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: '#fff'
+    backgroundColor: '#141414', // Dark background like Netflix
   },
-  center: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff'
+  scrollContainer: {
+    padding: 16,
   },
-  text: {
+  header: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    marginTop: 20,
+    marginBottom: 20,
+    textAlign: 'center',
+    color: '#fff', // White text
+  },
+  movieContainer: {
+    marginBottom: 30,
+    backgroundColor: '#333', // Dark card background
+    borderRadius: 8,
+    padding: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 5, // Add shadow for Android
+  },
+  movieTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#fff', // White text
+    marginBottom: 10,
+  },
+  webview: {
+    width: '100%',
+    height: 200,
+    borderRadius: 8,
+    overflow: 'hidden',
+    marginBottom: 10,
+  },
+  noTrailerText: {
     fontSize: 16,
-    marginBottom: 10
-  }
+    color: '#fff', // White text for empty state
+    textAlign: 'center',
+  },
 });
 
 export default Trailer;

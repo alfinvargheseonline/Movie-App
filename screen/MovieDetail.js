@@ -1,10 +1,38 @@
-import React from "react";
-import { StyleSheet, Text, View, Image, ScrollView, SafeAreaView } from "react-native";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, Text, View, Image, ScrollView, SafeAreaView, ActivityIndicator } from "react-native";
 import { LinearGradient } from "expo-linear-gradient"; // For overlay effect
 import { MaterialCommunityIcons } from "@expo/vector-icons"; // For rating stars
+import { WebView } from "react-native-webview"; // Import WebView
 
 const MovieDetail = ({ route }) => {
   const { item } = route.params;
+  const [trailerKey, setTrailerKey] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const apiKey = '5b074cb53fc521641c53478d3e73c285'; // Replace with your actual API key
+
+  // Fetch the trailer for the selected movie or TV show
+  useEffect(() => {
+    const fetchTrailer = async () => {
+      try {
+        const response = await fetch(
+          `https://api.themoviedb.org/3/movie/${item.id}/videos?api_key=${apiKey}&language=en-US`
+        );
+        const data = await response.json();
+        if (data.results && data.results.length > 0) {
+          setTrailerKey(data.results[0].key); // Set the first trailer key
+        }
+      } catch (error) {
+        console.error("Error fetching trailer:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (item.id) {
+      fetchTrailer();
+    }
+  }, [item.id]);
 
   const renderStars = (rating) => {
     const filledStars = Math.round(rating / 2);
@@ -55,6 +83,23 @@ const MovieDetail = ({ route }) => {
         {/* Movie Overview */}
         <Text style={styles.subheading}>Overview</Text>
         <Text style={styles.overview}>{item.overview || "No overview available."}</Text>
+
+        {/* Trailer */}
+        {loading ? (
+          <ActivityIndicator size="large" color="#ffffff" />
+        ) : trailerKey ? (
+          <SafeAreaView style={styles.trailerContainer}>
+            <Text style={styles.subheading}>Trailer</Text>
+            <WebView
+              style={styles.webview}
+              source={{ uri: `https://www.youtube.com/embed/${trailerKey}` }}
+              javaScriptEnabled={true}
+              domStorageEnabled={true}
+            />
+          </SafeAreaView>
+        ) : (
+          <Text style={styles.noTrailerText}>No trailer available</Text>
+        )}
 
         {/* Additional Details */}
         <View style={styles.detailsContainer}>
@@ -119,7 +164,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 300,
     borderRadius: 10,
-    marginTop:30
+    marginTop: 30,
   },
   gradient: {
     position: "absolute",
@@ -162,6 +207,20 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 22,
     marginBottom: 20,
+  },
+  trailerContainer: {
+    marginBottom: 20,
+  },
+  webview: {
+    width: "100%",
+    height: 250,
+    borderRadius: 8,
+    overflow: "hidden",
+  },
+  noTrailerText: {
+    color: "#fff",
+    fontSize: 16,
+    textAlign: "center",
   },
   detailsContainer: {
     marginVertical: 20,
